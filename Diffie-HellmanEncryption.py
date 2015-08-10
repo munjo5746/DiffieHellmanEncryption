@@ -6,7 +6,7 @@ from Crypto.Util.number import bytes_to_long as btl, long_to_bytes as ltb
 from Crypto.Hash import SHA256 as sha
 # Steps of generating keys.
 # Let Dkey be the key obtained with diffie hellman key exchange method.
-# Let's say that aes key and hmac key 
+# Let's say that aes key and hmac key
 
 
 # CFB Mode encryption
@@ -60,7 +60,7 @@ class aes_enctyption:
 		size_cipher = len(cipher)
 		size_msg = size_cipher - 16 - 16 # total length - size of iv - size of hmac.
 		iv = cipher[:size_iv] # The end index 16 is exclusive. So iv = 'initial vector', size = 14, and iv[:6] = 'initia'
-		
+
 
 		msg = cipher[16:16+size_msg]
 		# make aes object for decryption.
@@ -68,7 +68,7 @@ class aes_enctyption:
 
 		# decrypt
 		decrypted = decryption.decrypt(msg)
-		
+
 		# Authenticate the message by checking MAC.
 		mac_cipher = cipher[16+size_msg : ]
 		h = hmac.new(self.hmac_key)
@@ -76,7 +76,7 @@ class aes_enctyption:
 		mac = h.digest()
 		if mac == mac_cipher :
 			return decrypted
-		else : 
+		else :
 			return None
 
 # Test enc and decryption.
@@ -87,12 +87,13 @@ aes_enc.mode = aes.MODE_CFB
 # Extract keys using the given entropy. This entropy must be obtained using diffie hellman key.
 aes_enc.key, aes_enc.hmac_key = aes_enc.extract_keys('ke')
 
-msg = 'More added! encrypt this message! more message is added!Here more added!'
+msg = 'This message will be encrypted and decrypted!'
+print "Message : ", msg
 c = aes_enc.enc(msg, aes_enc.key, aes_enc.mode)
-print 'Encrypted Message', c
+print 'Encrypted Message : ', c
 d = aes_enc.dec(c, aes_enc.key, aes_enc.mode)
 if d is not None:
-	print d
+	print "Decrypted Message : ", d
 else :
 	print 'Error occur! Not decrypted!'
 
@@ -113,4 +114,3 @@ else :
 # 	print d
 # else :
 # 	print 'Error occur! Not decrypted!'
-
